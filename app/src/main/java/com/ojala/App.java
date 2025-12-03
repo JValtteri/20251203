@@ -16,21 +16,23 @@ public class App
         }
         try {
             startAltitude = Integer.parseInt(args[0]);
-            endAltitude = Integer.parseInt(args[0]);
+            endAltitude = Integer.parseInt(args[1]);
         } catch (NumberFormatException e) {
             System.out.println( "Inputs must be numbers" );
         }
-        calculateConsumption(startAltitude, endAltitude);
+
+        int consumption = calculateConsumption(startAltitude, endAltitude);
+        System.out.println( String.format("Consumption: %d lb", consumption)  );
     }
 
-    private static void calculateConsumption(int startAltitude, int endAltitude) {
+    public static int calculateConsumption(int startAltitude, int endAltitude) {
         int consumption   = 0;
         if (startAltitude < endAltitude) {
             consumption = calculateAscent(startAltitude, endAltitude);
         } else if (startAltitude > endAltitude) {
             consumption = calculateDescent(startAltitude, endAltitude);
         }
-        System.out.println( String.format("Consumption:", consumption, "lb")  );
+        return consumption;
     }
 
     private static int calculateAscent(int startAltitude, int endAltitude) {
@@ -42,45 +44,53 @@ public class App
     private static int calculateDescent(int startAltitude, int endAltitude) {
         int startConsumption = interpolateConsumption(startAltitude, descentData);
         int endConsumption = interpolateConsumption(endAltitude, descentData);
-        int consumption = endConsumption-startConsumption;
-        if (consumption < 0) {
-            return 0;
-        }
+        int consumption = startConsumption-endConsumption;
         return consumption;
     }
 
-    private static int interpolateConsumption(int value, FuelData[] data) {
+    public static int interpolateConsumption(int value, FuelData[] data) {
         int index = searchValueIndex(value, data);
         if (index > -1) {
             return data[index].consumption;
         }
         int insersionPoint = (-index-1);
         if (insersionPoint == data.length) {
-            int consumptionHigh = data[insersionPoint].consumption;
-            int consumptionLow  = data[insersionPoint-1]  .consumption;
-            int altitudeHigh    = data[insersionPoint].altitude;
-            int altitudeLow     = data[insersionPoint-1]  .altitude;
+            int consumptionHigh = data[insersionPoint-1]  .consumption;
+            int consumptionLow  = data[insersionPoint-2]  .consumption;
+            int altitudeHigh    = data[insersionPoint-1]  .altitude;
+            int altitudeLow     = data[insersionPoint-2]  .altitude;
 
-            int coefficient = (consumptionHigh-consumptionLow)/(altitudeHigh-altitudeLow);
+            float coefficient = (float) (consumptionHigh-consumptionLow)/(altitudeHigh-altitudeLow);
             int baseConsumption = consumptionHigh;
-            int interpotationAdjustment = (value-altitudeLow)*coefficient;
+            int interpotationAdjustment = Math.round((value-altitudeHigh)*coefficient);
 
             return baseConsumption + interpotationAdjustment;
-        } else {
+        } else if (insersionPoint == 0) {
             int consumptionHigh = data[insersionPoint+1].consumption;
             int consumptionLow  = data[insersionPoint]  .consumption;
             int altitudeHigh    = data[insersionPoint+1].altitude;
             int altitudeLow     = data[insersionPoint]  .altitude;
 
-            int coefficient = (consumptionHigh-consumptionLow)/(altitudeHigh-altitudeLow);
+            float coefficient = (float) (consumptionHigh-consumptionLow)/(altitudeHigh-altitudeLow);
             int baseConsumption = consumptionLow;
-            int interpotationAdjustment = (value-altitudeLow)*coefficient;
+            int interpotationAdjustment = Math.round((value-altitudeLow)*coefficient);
+
+            return baseConsumption + interpotationAdjustment;
+        } else {
+            int consumptionHigh = data[insersionPoint]  .consumption;
+            int consumptionLow  = data[insersionPoint-1].consumption;
+            int altitudeHigh    = data[insersionPoint]  .altitude;
+            int altitudeLow     = data[insersionPoint-1].altitude;
+
+            float coefficient = (float) (consumptionHigh-consumptionLow)/(altitudeHigh-altitudeLow);
+            int baseConsumption = consumptionLow;
+            int interpotationAdjustment = Math.round((value-altitudeLow)*coefficient);
 
             return baseConsumption + interpotationAdjustment;
         }
     }
 
-    private static int searchValueIndex(int value, FuelData[] data) {
+    public static int searchValueIndex(int value, FuelData[] data) {
         FuelData key = new FuelData(value, 0);
         return Arrays.binarySearch(data, key, altitudeComparator);
     }
@@ -101,21 +111,21 @@ public class App
         }
     };
 
-    static FuelData[] ascentData = {
-        new FuelData(0, 640),
-        new FuelData(5, 280),
-        new FuelData(10, 370),
-        new FuelData(15, 460),
-        new FuelData(20, 550),
-        new FuelData(25, 640)
+    static public FuelData[] ascentData = {
+        new FuelData(0, 0),
+        new FuelData(5000, 280),
+        new FuelData(10000, 370),
+        new FuelData(15000, 460),
+        new FuelData(20000, 550),
+        new FuelData(25000, 640)
     };
 
-    static FuelData[] descentData = {
+    static public FuelData[] descentData = {
         new FuelData(0, 0),
-        new FuelData(5, 5),
-        new FuelData(10, 20),
-        new FuelData(15, 40),
-        new FuelData(20, 70),
-        new FuelData(25, 90)
+        new FuelData(5000, 5),
+        new FuelData(10000, 20),
+        new FuelData(15000, 40),
+        new FuelData(20000, 70),
+        new FuelData(25000, 90)
     };
 }

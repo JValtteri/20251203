@@ -1,20 +1,66 @@
 package com.ojala;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-/**
- * Unit test for simple App.
- */
+
 public class AppTest
 {
-    /**
-     * Rigorous Test :-)
+    /*
+     * Esimerkki 1
      */
+
+
     @Test
-    public void shouldAnswerWithTrue()
+    public void esimerkki1()
     {
-        assertTrue( true );
+        int startAltitude = 5000;
+        int endAltitude = 15000;
+        int expect = 180;
+        int consumption = App.calculateConsumption(startAltitude, endAltitude);
+        assertEquals(expect, consumption);
+    }
+
+    /*
+     * Esimerkki 2
+     */
+
+    @Test
+    public void esimerkki2()
+    {
+        int startAltitude = 1000;
+        int endAltitude = 0;
+        int expect = 1;
+        int consumption = App.calculateConsumption(startAltitude, endAltitude);
+        assertEquals(expect, consumption);
+    }
+
+    /*
+     * Esimerkki 3
+     */
+
+    @Test
+    public void esimerkki3()
+    {
+        int startAltitude = 1000;
+        int endAltitude = -1000;
+        int expect = 2;
+        int consumption = App.calculateConsumption(startAltitude, endAltitude);
+        assertEquals(expect, consumption);
+    }
+
+    /*
+     * Esimerkki 4
+     */
+
+    @Test
+    public void esimerkki4()
+    {
+        int startAltitude = 0;
+        int endAltitude = 30000;
+        int expect = 730;
+        int consumption = App.calculateConsumption(startAltitude, endAltitude);
+        assertEquals(expect, consumption);
     }
 }
