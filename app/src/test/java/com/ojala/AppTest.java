@@ -10,11 +10,8 @@ public class AppTest
     /*
      * Esimerkki 1
      */
-
-
     @Test
-    public void esimerkki1()
-    {
+    public void esimerkki1() {
         int startAltitude = 5000;
         int endAltitude = 15000;
         int expect = 180;
@@ -25,10 +22,8 @@ public class AppTest
     /*
      * Esimerkki 2
      */
-
     @Test
-    public void esimerkki2()
-    {
+    public void esimerkki2() {
         int startAltitude = 1000;
         int endAltitude = 0;
         int expect = 1;
@@ -39,10 +34,8 @@ public class AppTest
     /*
      * Esimerkki 3
      */
-
     @Test
-    public void esimerkki3()
-    {
+    public void esimerkki3() {
         int startAltitude = 1000;
         int endAltitude = -1000;
         int expect = 2;
@@ -53,10 +46,8 @@ public class AppTest
     /*
      * Esimerkki 4
      */
-
     @Test
-    public void esimerkki4()
-    {
+    public void esimerkki4() {
         int startAltitude = 0;
         int endAltitude = 30000;
         int expect = 730;
