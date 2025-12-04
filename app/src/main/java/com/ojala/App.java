@@ -21,6 +21,7 @@ public class App{
             endAltitude = Integer.parseInt(args[1]);
         } catch (NumberFormatException e) {
             System.out.println( "Inputs must be numbers" );
+            return;
         }
 
         int consumption = calculateConsumption(startAltitude, endAltitude);
