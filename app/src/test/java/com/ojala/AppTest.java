@@ -54,4 +54,35 @@ public class AppTest
         int consumption = App.calculateConsumption(startAltitude, endAltitude);
         assertEquals(expect, consumption);
     }
+
+    /*
+     * Extra tests
+     */
+
+    @Test
+    public void climbInterpolation() {
+        int startAltitude = 12000;
+        int endAltitude = 24000;
+        int expect = 216;
+        int consumption = App.calculateConsumption(startAltitude, endAltitude);
+        assertEquals(expect, consumption);
+    }
+
+    @Test
+    public void climbMinRangeExtrapolation() {
+        int startAltitude = -1000;
+        int endAltitude = 10000;
+        int expect = 426;
+        int consumption = App.calculateConsumption(startAltitude, endAltitude);
+        assertEquals(expect, consumption);
+    }
+
+    @Test
+    public void descentMaxRangeExtrapolation() {
+        int startAltitude = 27000;
+        int endAltitude = 10000;
+        int expect = 78;
+        int consumption = App.calculateConsumption(startAltitude, endAltitude);
+        assertEquals(expect, consumption);
+    }
 }
